@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useSettings } from '../lib/settings';
 import ToastHost from '../components/ToastHost';
+import { useAuth } from '../lib/firebase/auth';
+import { useSync } from '../lib/sync/syncManager';
+import { useEffect, useState } from 'react';
+import { fetchUserProfile } from '../lib/firebase/firestore';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -15,6 +19,28 @@ const navItems = [
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const { settings } = useSettings();
+  const { state, logout } = useAuth();
+  const { status } = useSync();
+  const [roles, setRoles] = useState<{ instructor?: boolean; admin?: boolean }>({});
+
+  useEffect(() => {
+    const load = async () => {
+      if (!state.user) return;
+      const profile = await fetchUserProfile(state.user.uid);
+      setRoles(profile?.roles ?? {});
+    };
+    load();
+  }, [state.user]);
+
+  const syncLabel = settings.cloudMode
+    ? status === 'syncing'
+      ? 'Syncing…'
+      : status === 'error'
+        ? 'Sync error'
+        : status === 'offline'
+          ? 'Offline'
+          : 'Synced'
+    : 'Local only';
 
   return (
     <div
@@ -34,6 +60,28 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
               Ready in {settings.defaultTimer}m
             </span>
+            <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">{syncLabel}</span>
+            {state.user ? (
+              <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                {state.user.photoURL ? (
+                  <img src={state.user.photoURL} alt="" className="h-6 w-6 rounded-full" />
+                ) : (
+                  <span className="h-6 w-6 rounded-full bg-brand-200 text-brand-700 flex items-center justify-center">
+                    {state.user.email?.[0]?.toUpperCase() ?? 'U'}
+                  </span>
+                )}
+                <Link to="/account" className="text-xs text-slate-600">
+                  {state.user.email}
+                </Link>
+                <button className="text-xs text-rose-600" onClick={() => logout()}>
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link className="rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-white" to="/auth">
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
         <nav className="border-t border-slate-100 bg-white/95">
@@ -51,6 +99,30 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 {item.label}
               </NavLink>
             ))}
+            {roles.instructor && (
+              <NavLink
+                to="/instructor"
+                className={({ isActive }) =>
+                  `rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                    isActive ? 'bg-brand-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                  }`
+                }
+              >
+                Instructor
+              </NavLink>
+            )}
+            {roles.admin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                    isActive ? 'bg-brand-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                  }`
+                }
+              >
+                Admin
+              </NavLink>
+            )}
           </div>
         </nav>
       </header>

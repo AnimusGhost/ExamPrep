@@ -20,6 +20,26 @@ export const ScoreLineChart = ({ attempts }: { attempts: AttemptSummary[] }) => 
   );
 };
 
+export const RollingAverageChart = ({ attempts }: { attempts: AttemptSummary[] }) => {
+  const sorted = attempts.slice().reverse();
+  const averages = sorted.map((attempt, index) => {
+    const window = sorted.slice(Math.max(0, index - 2), index + 1);
+    const avg = window.reduce((acc, item) => acc + item.score, 0) / window.length;
+    return { x: index * 60 + 20, y: 120 - avg };
+  });
+  const path = averages.map((point, index) => `${index === 0 ? 'M' : 'L'}${point.x},${point.y}`).join(' ');
+  return (
+    <svg viewBox="0 0 400 140" className="h-36 w-full">
+      <rect width="400" height="140" rx="16" fill="#f8fafc" />
+      <path d="M20,120 L380,120" stroke="#e2e8f0" strokeWidth="2" />
+      {averages.length > 1 && <path d={path} stroke="#14b8a6" strokeWidth="3" fill="none" />}
+      {averages.map((point) => (
+        <circle key={`${point.x}-${point.y}`} cx={point.x} cy={point.y} r="4" fill="#0f766e" />
+      ))}
+    </svg>
+  );
+};
+
 export const BarChart = ({ data }: { data: { label: string; value: number }[] }) => {
   const max = Math.max(...data.map((item) => item.value), 1);
   return (

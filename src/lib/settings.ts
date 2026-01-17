@@ -9,6 +9,7 @@ export type Settings = {
   defaultTimer: number;
   passThreshold: number;
   authorMode: boolean;
+  cloudMode: boolean;
 };
 
 const defaultSettings: Settings = {
@@ -17,7 +18,8 @@ const defaultSettings: Settings = {
   fontScale: 1,
   defaultTimer: 60,
   passThreshold: 70,
-  authorMode: false
+  authorMode: false,
+  cloudMode: false
 };
 
 const SettingsContext = createContext<{

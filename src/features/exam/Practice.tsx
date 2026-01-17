@@ -11,6 +11,7 @@ import { useToast } from '../../lib/toast';
 import { getQuestionBank } from '../../data/questionBank';
 import { clearStudySet, loadStudySet, saveStudySet } from '../../lib/studySet';
 import { Link } from 'react-router-dom';
+import { useSync } from '../../lib/sync/syncManager';
 
 const allDomains: Domain[] = [
   'Payroll Procedures and Calculations',
@@ -27,6 +28,7 @@ const Practice = () => {
   const { settings } = useSettings();
   const { recordAttempt, state } = useProgress();
   const { push } = useToast();
+  const { queueAttempt } = useSync();
   const [config, setConfig] = useState({
     count: 10,
     domains: allDomains,
@@ -117,6 +119,16 @@ const Practice = () => {
         return acc;
       }, {} as Record<string, { seen: number; correct: number; lastMissed?: string }>)
     );
+    if (settings.cloudMode) {
+      queueAttempt({
+        mode: 'practice',
+        score: percent,
+        correct: totalCorrect,
+        total: questions.length,
+        domainBreakdown: breakdown,
+        answers: scored.map((item) => ({ id: item.question.id, correct: item.correct }))
+      });
+    }
 
     setShowSummary(true);
   };
@@ -134,6 +146,36 @@ const Practice = () => {
           </div>
           <Button variant="primary" onClick={startSession}>
             Start Practice
+          </Button>
+        </div>
+        <div className="mt-4">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              const weakest = allDomains
+                .map((domain) => {
+                  const questions = getQuestionBank().filter((question) => question.domain === domain);
+                  const totals = questions.reduce(
+                    (acc, question) => {
+                      const stats = state.statsByQuestion[question.id];
+                      if (stats) {
+                        acc.total += stats.seen;
+                        acc.correct += stats.correct;
+                      }
+                      return acc;
+                    },
+                    { total: 0, correct: 0 }
+                  );
+                  const accuracy = totals.total ? totals.correct / totals.total : 0;
+                  return { domain, accuracy };
+                })
+                .sort((a, b) => a.accuracy - b.accuracy)
+                .slice(0, 2)
+                .map((item) => item.domain);
+              setConfig((prev) => ({ ...prev, domains: weakest.length ? weakest : prev.domains }));
+            }}
+          >
+            Smart Practice: Weakest Areas
           </Button>
         </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-3">

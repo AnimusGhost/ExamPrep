@@ -16,14 +16,14 @@ const Flashcards = () => {
   const cards = useMemo(() => {
     const bank = getQuestionBank();
     const now = new Date().toISOString();
-    return bank.filter((question) => !schedule[question.id] || schedule[question.id].nextDue <= now);
+    return bank.filter((question) => !schedule[question.id] || schedule[question.id].nextDueAt <= now);
   }, [schedule]);
 
   const current = cards[index % Math.max(cards.length, 1)];
 
-  const recordConfidence = (confidence: 'low' | 'medium' | 'high') => {
+  const recordConfidence = (rating: 'again' | 'hard' | 'good' | 'easy') => {
     if (!current) return;
-    const next = updateFlashcard(current.id, confidence);
+    const next = updateFlashcard(current.id, rating);
     setSchedule(next);
     setShowBack(false);
     setIndex((prev) => prev + 1);
@@ -64,14 +64,17 @@ const Flashcards = () => {
               </Button>
             ) : (
               <>
-                <Button variant="secondary" onClick={() => recordConfidence('low')}>
-                  Needs review
+                <Button variant="secondary" onClick={() => recordConfidence('again')}>
+                  Again
                 </Button>
-                <Button variant="secondary" onClick={() => recordConfidence('medium')}>
-                  Almost there
+                <Button variant="secondary" onClick={() => recordConfidence('hard')}>
+                  Hard
                 </Button>
-                <Button variant="primary" onClick={() => recordConfidence('high')}>
-                  Confident
+                <Button variant="secondary" onClick={() => recordConfidence('good')}>
+                  Good
+                </Button>
+                <Button variant="primary" onClick={() => recordConfidence('easy')}>
+                  Easy
                 </Button>
               </>
             )}

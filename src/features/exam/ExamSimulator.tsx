@@ -11,6 +11,7 @@ import { useProgress } from '../../lib/progress';
 import { useToast } from '../../lib/toast';
 import { saveStudySet } from '../../lib/studySet';
 import { Link } from 'react-router-dom';
+import { useSync } from '../../lib/sync/syncManager';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -22,6 +23,7 @@ const ExamSimulator = () => {
   const { settings } = useSettings();
   const { recordAttempt } = useProgress();
   const { push } = useToast();
+  const { queueAttempt } = useSync();
   const [questions, setQuestions] = useState<Question[]>(() => buildTimedExam());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>(() => ({}));
@@ -143,6 +145,17 @@ const ExamSimulator = () => {
         return acc;
       }, {} as Record<string, { seen: number; correct: number; lastMissed?: string }>)
     );
+    if (settings.cloudMode) {
+      queueAttempt({
+        mode: 'exam',
+        score: percent,
+        correct: totalCorrect,
+        total: questions.length,
+        durationSeconds: settings.defaultTimer * 60 - secondsLeft,
+        domainBreakdown: breakdown,
+        answers: scored.map((item) => ({ id: item.question.id, correct: item.correct }))
+      });
+    }
 
     setShowReview(true);
     setShowSubmit(false);

@@ -3,11 +3,13 @@ import Panel from '../../components/Panel';
 import Button from '../../components/Button';
 import { useSettings } from '../../lib/settings';
 import { exportStorage, importStorage } from '../../lib/storage';
+import { cloudStatus } from '../../config/env';
 
 const SettingsPage = () => {
   const { settings, update } = useSettings();
   const [importPayload, setImportPayload] = useState('');
   const [exportPayload, setExportPayload] = useState('');
+  const cloud = cloudStatus();
 
   const handleExport = () => {
     setExportPayload(exportStorage());
@@ -27,6 +29,21 @@ const SettingsPage = () => {
           <h2 className="text-2xl font-semibold text-ink-900">Customize your study experience</h2>
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="label">Cloud Mode</label>
+            <select
+              className="input"
+              value={settings.cloudMode ? 'on' : 'off'}
+              onChange={(event) => update({ cloudMode: event.target.value === 'on' })}
+              disabled={!cloud.available}
+            >
+              <option value="off">Off</option>
+              <option value="on">On</option>
+            </select>
+            {!cloud.available && (
+              <p className="mt-2 text-xs text-amber-600">Cloud features unavailable. Missing Firebase env keys.</p>
+            )}
+          </div>
           <div>
             <label className="label">Fun Mode</label>
             <select className="input" value={settings.funMode ? 'on' : 'off'} onChange={(event) => update({ funMode: event.target.value === 'on' })}>

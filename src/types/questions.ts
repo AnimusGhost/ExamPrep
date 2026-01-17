@@ -56,13 +56,19 @@ export type MatchQuestion = BaseQuestion & {
   correctMatches: number[];
 };
 
-export type Question =
+export type Question = 
   | McqQuestion
   | MsqQuestion
   | NumericQuestion
   | FillQuestion
   | OrderQuestion
   | MatchQuestion;
+
+export type BankVersion = {
+  version: string;
+  publishedAt?: string;
+  notes?: string;
+};
 
 export type Answer =
   | { type: 'mcq'; value: number | null }

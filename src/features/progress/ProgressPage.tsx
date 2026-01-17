@@ -1,6 +1,6 @@
 import Panel from '../../components/Panel';
 import { useProgress } from '../../lib/progress';
-import { BarChart, ScoreLineChart, domainAccuracyData } from './Charts';
+import { BarChart, ScoreLineChart, RollingAverageChart, domainAccuracyData } from './Charts';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
 import { getQuestionBank } from '../../data/questionBank';
@@ -31,6 +31,17 @@ const ProgressPage = () => {
     .filter((item) => item.value < 70)
     .map((item) => item.label)
     .slice(0, 3);
+
+  const readinessScore = (() => {
+    const coverage = Math.min(Object.keys(state.statsByQuestion).length / 120, 1);
+    const overall = attempts.length
+      ? attempts.reduce((acc, item) => acc + item.score, 0) / attempts.length / 100
+      : 0;
+    const stability = domainData.length
+      ? 1 - domainData.reduce((acc, item) => acc + Math.abs(item.value - 70), 0) / (domainData.length * 100)
+      : 0;
+    return Math.round((overall * 0.5 + stability * 0.3 + coverage * 0.2) * 100);
+  })();
 
   return (
     <div className="flex flex-col gap-6">
@@ -65,10 +76,25 @@ const ProgressPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel>
+          <h3 className="card-title">Readiness score</h3>
+          <p className="mt-1 text-sm text-slate-500">Blends accuracy, consistency, and coverage.</p>
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-center">
+            <p className="text-3xl font-semibold text-ink-900">{readinessScore}</p>
+            <p className="text-xs text-slate-500">Target 75+ before exam day.</p>
+          </div>
+        </Panel>
+        <Panel>
           <h3 className="card-title">Difficulty breakdown</h3>
           <p className="mt-1 text-sm text-slate-500">Overall performance across difficulty levels.</p>
           <div className="mt-4">
             <BarChart data={difficultyData} />
+          </div>
+        </Panel>
+        <Panel>
+          <h3 className="card-title">Rolling average trend</h3>
+          <p className="mt-1 text-sm text-slate-500">3-attempt rolling average.</p>
+          <div className="mt-4">
+            {attempts.length ? <RollingAverageChart attempts={attempts.slice(0, 8)} /> : <div className="text-sm text-slate-500">No attempts yet.</div>}
           </div>
         </Panel>
         <Panel>
