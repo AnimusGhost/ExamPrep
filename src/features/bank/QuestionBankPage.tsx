@@ -83,6 +83,8 @@ const QuestionBankPage = () => {
       default:
         return previous;
     }
+  const updateEditQuestion = (updater: (question: Question) => Question) => {
+    setEditQuestion((prev) => (prev ? updater(prev) : prev));
   };
 
   const saveQuestion = () => {
@@ -171,6 +173,10 @@ const QuestionBankPage = () => {
                   setEditQuestion((prev) =>
                     prev ? buildQuestionForType(event.target.value as Question['type'], prev) : prev
                   )
+                  updateEditQuestion((question) => ({
+                    ...question,
+                    type: event.target.value as Question['type']
+                  }))
                 }
               >
                 <option value="mcq">MCQ</option>
