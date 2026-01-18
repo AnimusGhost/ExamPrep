@@ -9,7 +9,13 @@ const domains: Domain[] = [
   'Ethical Considerations and Customer Service'
 ];
 
-const calculationTemplates = [
+type CalculationTemplate = {
+  title: string;
+  domain: Domain;
+  generate: (id: number) => Question;
+};
+
+const calculationTemplates: CalculationTemplate[] = [
   {
     title: 'Overtime premium',
     domain: 'Payroll Procedures and Calculations' as Domain,
