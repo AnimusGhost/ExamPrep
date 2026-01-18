@@ -89,8 +89,6 @@ const QuestionBankPage = () => {
   const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const nextType = event.target.value as Question['type'];
     setEditQuestion((prev) => (prev ? buildQuestionForType(nextType, prev) : prev));
-  const updateEditQuestion = (updater: (question: Question) => Question) => {
-    setEditQuestion((prev) => (prev ? updater(prev) : prev));
   };
 
   const saveQuestion = () => {
@@ -176,15 +174,6 @@ const QuestionBankPage = () => {
                 className="input"
                 value={editQuestion.type}
                 onChange={handleTypeChange}
-                onChange={(event) =>
-                  setEditQuestion((prev) =>
-                    prev ? buildQuestionForType(event.target.value as Question['type'], prev) : prev
-                  )
-                  updateEditQuestion((question) => ({
-                    ...question,
-                    type: event.target.value as Question['type']
-                  }))
-                }
               >
                 <option value="mcq">MCQ</option>
                 <option value="msq">MSQ</option>
