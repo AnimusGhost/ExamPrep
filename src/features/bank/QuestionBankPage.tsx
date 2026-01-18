@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import Panel from '../../components/Panel';
 import Button from '../../components/Button';
 import { getQuestionBank } from '../../data/questionBank';
@@ -83,6 +84,11 @@ const QuestionBankPage = () => {
       default:
         return previous;
     }
+  };
+
+  const handleTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const nextType = event.target.value as Question['type'];
+    setEditQuestion((prev) => (prev ? buildQuestionForType(nextType, prev) : prev));
   const updateEditQuestion = (updater: (question: Question) => Question) => {
     setEditQuestion((prev) => (prev ? updater(prev) : prev));
   };
@@ -169,6 +175,7 @@ const QuestionBankPage = () => {
               <select
                 className="input"
                 value={editQuestion.type}
+                onChange={handleTypeChange}
                 onChange={(event) =>
                   setEditQuestion((prev) =>
                     prev ? buildQuestionForType(event.target.value as Question['type'], prev) : prev
