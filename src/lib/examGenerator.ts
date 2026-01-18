@@ -43,39 +43,6 @@ const typeTargets: QuestionType[] = [
   'match'
 ];
 
-const difficultyTargets: Difficulty[] = [
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Easy',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Medium',
-  'Hard',
-  'Hard',
-  'Hard',
-  'Hard',
-  'Hard',
-  'Hard'
-];
-
 export type PracticeConfig = {
   count: number;
   domains: Domain[];
