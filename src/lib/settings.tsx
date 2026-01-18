@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { loadFromStorage, saveToStorage } from './storage';
 
@@ -9,7 +9,7 @@ export type Settings = {
   defaultTimer: number;
   passThreshold: number;
   authorMode: boolean;
-  theme: 'system' | 'light' | 'dark';
+  cloudMode: boolean;
 };
 
 const defaultSettings: Settings = {
@@ -19,7 +19,7 @@ const defaultSettings: Settings = {
   defaultTimer: 60,
   passThreshold: 70,
   authorMode: false,
-  theme: 'system'
+  cloudMode: false
 };
 
 const SettingsContext = createContext<{
@@ -28,24 +28,7 @@ const SettingsContext = createContext<{
 } | null>(null);
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-  const [settings, setSettings] = useState<Settings>(() => ({
-    ...defaultSettings,
-    ...loadFromStorage('settings', defaultSettings)
-  }));
-
-  useEffect(() => {
-    const updateTheme = () => {
-      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-      const nextTheme = settings.theme === 'system' ? (prefersDark ? 'dark' : 'light') : settings.theme;
-      document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-      document.documentElement.style.colorScheme = nextTheme;
-    };
-    updateTheme();
-    const media = window.matchMedia?.('(prefers-color-scheme: dark)');
-    const handler = () => updateTheme();
-    media?.addEventListener?.('change', handler);
-    return () => media?.removeEventListener?.('change', handler);
-  }, [settings.theme]);
+  const [settings, setSettings] = useState<Settings>(() => loadFromStorage('settings', defaultSettings));
 
   const update = (next: Partial<Settings>) => {
     setSettings((prev) => {
