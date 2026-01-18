@@ -36,10 +36,10 @@ const Flashcards = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Flashcards</p>
-            <h2 className="text-2xl font-semibold text-ink-900">Recall and reinforce</h2>
-            <p className="text-sm text-slate-600">Flip cards, rate confidence, and let the scheduler guide you.</p>
+            <h2 className="text-2xl font-semibold text-ink-900 dark:text-white">Recall and reinforce</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Flip cards, rate confidence, and let the scheduler guide you.</p>
           </div>
-          <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+          <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
             Due now: {cards.length}
           </div>
         </div>
@@ -47,12 +47,12 @@ const Flashcards = () => {
 
       {current ? (
         <Panel>
-          <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center">
+          <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 text-center dark:border-slate-800 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Card {index + 1}</p>
-            <h3 className="mt-4 text-lg font-semibold text-ink-900">{current.prompt}</h3>
+            <h3 className="mt-4 text-lg font-semibold text-ink-900 dark:text-white">{current.prompt}</h3>
             {showBack && (
-              <div className="mt-4 text-sm text-slate-600">
-                <p className="font-semibold text-slate-800">Answer: {correctAnswerLabel(current)}</p>
+              <div className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+                <p className="font-semibold text-slate-800 dark:text-slate-100">Answer: {correctAnswerLabel(current)}</p>
                 <p className="mt-2">{current.explanation}</p>
               </div>
             )}
@@ -82,8 +82,8 @@ const Flashcards = () => {
         </Panel>
       ) : (
         <Panel>
-          <h3 className="text-lg font-semibold text-ink-900">All caught up!</h3>
-          <p className="mt-2 text-sm text-slate-500">No cards due now. Check back later or reset your schedule.</p>
+          <h3 className="text-lg font-semibold text-ink-900 dark:text-white">All caught up!</h3>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">No cards due now. Check back later or reset your schedule.</p>
           <Button className="mt-4" variant="secondary" onClick={() => setSchedule({})}>
             Reset schedule
           </Button>

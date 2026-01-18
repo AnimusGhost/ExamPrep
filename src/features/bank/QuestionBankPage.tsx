@@ -122,7 +122,7 @@ const QuestionBankPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Question Bank</p>
-            <h2 className="text-2xl font-semibold text-ink-900">Browse and refine questions</h2>
+            <h2 className="text-2xl font-semibold text-ink-900 dark:text-white">Browse and refine questions</h2>
           </div>
           {settings.authorMode && (
             <div className="flex flex-wrap gap-2">

@@ -49,7 +49,7 @@ const ProgressPage = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Progress Analytics</p>
-            <h2 className="text-2xl font-semibold text-ink-900">Track improvement over time</h2>
+            <h2 className="text-2xl font-semibold text-ink-900 dark:text-white">Track improvement over time</h2>
           </div>
           <Button as={Link} to="/practice" variant="primary">
             Create study set
@@ -60,14 +60,14 @@ const ProgressPage = () => {
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel>
           <h3 className="card-title">Scores over time</h3>
-          <p className="mt-1 text-sm text-slate-500">Latest attempts: {attempts.length}</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Latest attempts: {attempts.length}</p>
           <div className="mt-4">
             {attempts.length ? <ScoreLineChart attempts={attempts.slice(0, 8)} /> : <div className="text-sm text-slate-500">No attempts yet.</div>}
           </div>
         </Panel>
         <Panel>
           <h3 className="card-title">Domain accuracy</h3>
-          <p className="mt-1 text-sm text-slate-500">Aggregate accuracy by domain.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Aggregate accuracy by domain.</p>
           <div className="mt-4">
             <BarChart data={domainData} />
           </div>
@@ -77,22 +77,22 @@ const ProgressPage = () => {
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel>
           <h3 className="card-title">Readiness score</h3>
-          <p className="mt-1 text-sm text-slate-500">Blends accuracy, consistency, and coverage.</p>
-          <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-center">
-            <p className="text-3xl font-semibold text-ink-900">{readinessScore}</p>
-            <p className="text-xs text-slate-500">Target 75+ before exam day.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Blends accuracy, consistency, and coverage.</p>
+          <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50 p-4 text-center dark:border-slate-800 dark:bg-slate-900">
+            <p className="text-3xl font-semibold text-ink-900 dark:text-white">{readinessScore}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Target 75+ before exam day.</p>
           </div>
         </Panel>
         <Panel>
           <h3 className="card-title">Difficulty breakdown</h3>
-          <p className="mt-1 text-sm text-slate-500">Overall performance across difficulty levels.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Overall performance across difficulty levels.</p>
           <div className="mt-4">
             <BarChart data={difficultyData} />
           </div>
         </Panel>
         <Panel>
           <h3 className="card-title">Rolling average trend</h3>
-          <p className="mt-1 text-sm text-slate-500">3-attempt rolling average.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">3-attempt rolling average.</p>
           <div className="mt-4">
             {attempts.length ? <RollingAverageChart attempts={attempts.slice(0, 8)} /> : <div className="text-sm text-slate-500">No attempts yet.</div>}
           </div>
@@ -100,17 +100,17 @@ const ProgressPage = () => {
         <Panel>
           <h3 className="card-title">Recommended next steps</h3>
           {weakAreas.length ? (
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
+            <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
               {weakAreas.map((area) => (
-                <li key={area} className="rounded-xl border border-amber-100 bg-amber-50 px-3 py-2">
+                <li key={area} className="rounded-xl border border-amber-100 bg-amber-50 px-3 py-2 dark:border-amber-900/60 dark:bg-amber-900/30">
                   Focus on {area} with targeted drills and flashcards.
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-slate-600">You are trending strong across all domains. Keep consistency!</p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">You are trending strong across all domains. Keep consistency!</p>
           )}
-          <div className="mt-4 text-sm text-slate-500">
+          <div className="mt-4 text-sm text-slate-500 dark:text-slate-400">
             Build a remediation plan by launching a practice session filtered to missed items.
           </div>
         </Panel>

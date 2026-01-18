@@ -11,7 +11,6 @@ import { useProgress } from '../../lib/progress';
 import { useToast } from '../../lib/toast';
 import { saveStudySet } from '../../lib/studySet';
 import { Link } from 'react-router-dom';
-import { useSync } from '../../lib/sync/syncManager';
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -23,7 +22,6 @@ const ExamSimulator = () => {
   const { settings } = useSettings();
   const { recordAttempt } = useProgress();
   const { push } = useToast();
-  const { queueAttempt } = useSync();
   const [questions, setQuestions] = useState<Question[]>(() => buildTimedExam());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>(() => ({}));
@@ -145,18 +143,6 @@ const ExamSimulator = () => {
         return acc;
       }, {} as Record<string, { seen: number; correct: number; lastMissed?: string }>)
     );
-    if (settings.cloudMode) {
-      queueAttempt({
-        mode: 'exam',
-        score: percent,
-        correct: totalCorrect,
-        total: questions.length,
-        durationSeconds: settings.defaultTimer * 60 - secondsLeft,
-        domainBreakdown: breakdown,
-        answers: scored.map((item) => ({ id: item.question.id, correct: item.correct }))
-      });
-    }
-
     setShowReview(true);
     setShowSubmit(false);
     if (settings.funMode) push('Exam complete. Great focus.');
@@ -193,13 +179,13 @@ const ExamSimulator = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Timed Exam Simulator</p>
-            <h2 className="text-2xl font-semibold text-ink-900">Payroll Technician Exam</h2>
+            <h2 className="text-2xl font-semibold text-ink-900 dark:text-white">Payroll Technician Exam</h2>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+            <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
               Time left: {formatTime(secondsLeft)}
             </div>
-            <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+            <div className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
               Answered: {answeredCount}/{questions.length}
             </div>
             <Button variant="ghost" onClick={resetExam}>
@@ -212,7 +198,7 @@ const ExamSimulator = () => {
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         <Panel className="h-fit lg:sticky lg:top-24">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-slate-700">Navigation</h3>
+            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Navigation</h3>
             <button className="text-xs text-brand-600 lg:hidden" onClick={() => setNavOpen(!navOpen)}>
               {navOpen ? 'Hide' : 'Show'}
             </button>
