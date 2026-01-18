@@ -22,7 +22,7 @@ export const ScoreLineChart = ({ attempts }: { attempts: AttemptSummary[] }) => 
 
 export const RollingAverageChart = ({ attempts }: { attempts: AttemptSummary[] }) => {
   const sorted = attempts.slice().reverse();
-  const averages = sorted.map((attempt, index) => {
+  const averages = sorted.map((_, index) => {
     const window = sorted.slice(Math.max(0, index - 2), index + 1);
     const avg = window.reduce((acc, item) => acc + item.score, 0) / window.length;
     return { x: index * 60 + 20, y: 120 - avg };
