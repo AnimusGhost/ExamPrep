@@ -42,6 +42,47 @@ const QuestionBankPage = () => {
     setValidationErrors([]);
   };
 
+  const buildQuestionForType = (type: Question['type'], previous: Question): Question => {
+    const base = {
+      id: previous.id,
+      domain: previous.domain,
+      difficulty: previous.difficulty,
+      prompt: previous.prompt,
+      explanation: previous.explanation,
+      tags: previous.tags,
+      scenario: previous.scenario
+    };
+
+    const options = 'options' in previous && Array.isArray(previous.options) ? previous.options : ['Option A', 'Option B'];
+
+    switch (type) {
+      case 'mcq':
+        return { ...base, type, options, correctIndex: 'correctIndex' in previous ? previous.correctIndex : 0 };
+      case 'msq':
+        return { ...base, type, options, correctIndices: 'correctIndices' in previous ? previous.correctIndices : [0] };
+      case 'numeric':
+        return {
+          ...base,
+          type,
+          correctValue: 'correctValue' in previous ? previous.correctValue : 0,
+          tolerance: 'tolerance' in previous ? previous.tolerance : 0.5,
+          unitHint: 'unitHint' in previous ? previous.unitHint : undefined
+        };
+      case 'fill':
+        return { ...base, type, correctAnswer: 'correctAnswer' in previous ? previous.correctAnswer : '' };
+      case 'order':
+        return { ...base, type, options, correctOrder: 'correctOrder' in previous ? previous.correctOrder : [0, 1] };
+      case 'match':
+        return {
+          ...base,
+          type,
+          rows: 'rows' in previous && Array.isArray(previous.rows) ? previous.rows : ['Row A', 'Row B'],
+          options,
+          correctMatches: 'correctMatches' in previous ? previous.correctMatches : [0, 1]
+        };
+      default:
+        return previous;
+    }
   const updateEditQuestion = (updater: (question: Question) => Question) => {
     setEditQuestion((prev) => (prev ? updater(prev) : prev));
   };
@@ -129,6 +170,9 @@ const QuestionBankPage = () => {
                 className="input"
                 value={editQuestion.type}
                 onChange={(event) =>
+                  setEditQuestion((prev) =>
+                    prev ? buildQuestionForType(event.target.value as Question['type'], prev) : prev
+                  )
                   updateEditQuestion((question) => ({
                     ...question,
                     type: event.target.value as Question['type']
