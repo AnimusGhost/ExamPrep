@@ -42,6 +42,10 @@ const QuestionBankPage = () => {
     setValidationErrors([]);
   };
 
+  const updateEditQuestion = (updater: (question: Question) => Question) => {
+    setEditQuestion((prev) => (prev ? updater(prev) : prev));
+  };
+
   const saveQuestion = () => {
     if (!editQuestion) return;
     const errors = validateQuestion(editQuestion as Question);
@@ -124,7 +128,12 @@ const QuestionBankPage = () => {
               <select
                 className="input"
                 value={editQuestion.type}
-                onChange={(event) => setEditQuestion({ ...editQuestion, type: event.target.value as Question['type'] })}
+                onChange={(event) =>
+                  updateEditQuestion((question) => ({
+                    ...question,
+                    type: event.target.value as Question['type']
+                  }))
+                }
               >
                 <option value="mcq">MCQ</option>
                 <option value="msq">MSQ</option>

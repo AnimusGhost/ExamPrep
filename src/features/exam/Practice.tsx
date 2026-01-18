@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Panel from '../../components/Panel';
 import Button from '../../components/Button';
 import QuestionRenderer from './QuestionRenderer';
