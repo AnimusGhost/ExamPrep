@@ -4,11 +4,11 @@
 
 :root {
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color-scheme: light;
+  color-scheme: light dark;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
 }
 
 * {
@@ -35,7 +35,7 @@ body {
 }
 
 .panel {
-  @apply bg-white rounded-2xl shadow-soft border border-slate-100;
+  @apply bg-white rounded-2xl shadow-soft border border-slate-100 dark:bg-slate-900 dark:border-slate-800 dark:shadow-none;
 }
 
 .tag {
@@ -43,15 +43,15 @@ body {
 }
 
 .tag-domain {
-  @apply bg-brand-50 text-brand-700;
+  @apply bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-100;
 }
 
 .tag-difficulty {
-  @apply bg-amber-50 text-amber-700;
+  @apply bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-100;
 }
 
 .tag-type {
-  @apply bg-emerald-50 text-emerald-700;
+  @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-100;
 }
 
 .btn {
@@ -63,27 +63,27 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-slate-100 text-slate-700 hover:bg-slate-200;
+  @apply bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700;
 }
 
 .btn-ghost {
-  @apply bg-transparent text-slate-600 hover:bg-slate-100;
+  @apply bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800;
 }
 
 .input {
-  @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200;
+  @apply w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-brand-400 dark:focus:ring-brand-900/40;
 }
 
 .label {
-  @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
+  @apply text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400;
 }
 
 .card-title {
-  @apply text-lg font-semibold text-slate-900;
+  @apply text-lg font-semibold text-slate-900 dark:text-slate-100;
 }
 
 .text-muted {
-  @apply text-sm text-slate-500;
+  @apply text-sm text-slate-500 dark:text-slate-400;
 }
 
 .skeleton {

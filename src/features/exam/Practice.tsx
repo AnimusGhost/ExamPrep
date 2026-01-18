@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Panel from '../../components/Panel';
 import Button from '../../components/Button';
 import QuestionRenderer from './QuestionRenderer';
@@ -11,7 +11,6 @@ import { useToast } from '../../lib/toast';
 import { getQuestionBank } from '../../data/questionBank';
 import { clearStudySet, loadStudySet, saveStudySet } from '../../lib/studySet';
 import { Link } from 'react-router-dom';
-import { useSync } from '../../lib/sync/syncManager';
 
 const allDomains: Domain[] = [
   'Payroll Procedures and Calculations',
@@ -28,7 +27,6 @@ const Practice = () => {
   const { settings } = useSettings();
   const { recordAttempt, state } = useProgress();
   const { push } = useToast();
-  const { queueAttempt } = useSync();
   const [config, setConfig] = useState({
     count: 10,
     domains: allDomains,
@@ -119,17 +117,6 @@ const Practice = () => {
         return acc;
       }, {} as Record<string, { seen: number; correct: number; lastMissed?: string }>)
     );
-    if (settings.cloudMode) {
-      queueAttempt({
-        mode: 'practice',
-        score: percent,
-        correct: totalCorrect,
-        total: questions.length,
-        domainBreakdown: breakdown,
-        answers: scored.map((item) => ({ id: item.question.id, correct: item.correct }))
-      });
-    }
-
     setShowSummary(true);
   };
 
@@ -142,7 +129,7 @@ const Practice = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">Topic Practice</p>
-            <h2 className="text-2xl font-semibold text-ink-900">Build your practice set</h2>
+            <h2 className="text-2xl font-semibold text-ink-900 dark:text-white">Build your practice set</h2>
           </div>
           <Button variant="primary" onClick={startSession}>
             Start Practice
